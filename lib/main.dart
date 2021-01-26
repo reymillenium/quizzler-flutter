@@ -71,23 +71,21 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   void answerQuestion(bool answer) {
-    if (index < initialMaxIndex) {
+    if (index > initialMaxIndex) {
+      setState(() {
+        questionnaire.removeAt(3);
+        childrenIcons.removeRange(0, childrenIcons.length);
+      });
+
+      resetIndex();
+    } else {
       addIcon(answer == questionnaire[index]['answer']);
       increaseIndex();
-    } else {
+
       if (index == initialMaxIndex) {
-        addIcon(answer == questionnaire[index]['answer']);
         setState(() {
           questionnaire.add({'question': evaluateAnswers(), 'answer': true});
         });
-        increaseIndex();
-      } else if (index > initialMaxIndex) {
-        setState(() {
-          questionnaire.removeAt(3);
-          childrenIcons.removeRange(0, childrenIcons.length);
-        });
-
-        resetIndex();
       }
     }
   }
