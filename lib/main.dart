@@ -26,7 +26,7 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  List<Widget> childrenIcons = [];
+  List<Icon> childrenIcons = [];
 
   Widget createIcon({IconData icon = Icons.done, Color color = Colors.green}) {
     return (Icon(
@@ -39,13 +39,25 @@ class _QuizPageState extends State<QuizPage> {
     setState(() {
       Icon newIcon = (isCorrect ? createIcon() : createIcon(icon: Icons.close, color: Colors.red));
       childrenIcons.add(newIcon);
+      // print(newIcon);
+      // print(newIcon.color);
+      // print(newIcon.color.value);
+      // if (newIcon.icon.hashCode == Icons.done.hashCode) {
+      //   print('Its a right icon');
+      // } else if (newIcon.icon.hashCode == Icons.close.hashCode) {
+      //   print('Its a wrong icon');
+      // }
+      // print(newIcon.icon.hashCode);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     if (childrenIcons.isEmpty) {
-      childrenIcons.add(createIcon(icon: Icons.done, color: Colors.grey.shade900));
+      childrenIcons.add(createIcon(icon: Icons.phone, color: Colors.grey.shade900));
+      // childrenIcons.add(createIcon(icon: Icons.phone, color: Colors.green));
+    } else if (childrenIcons.length > 1 && childrenIcons.first.icon.hashCode == Icons.phone.hashCode) {
+      childrenIcons.removeAt(0);
     }
 
     return Column(
