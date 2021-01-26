@@ -63,11 +63,38 @@ class _QuizPageState extends State<QuizPage> {
     });
   }
 
-  void evaluateAnswer(bool answer) {
-    addIcon(answer == questionnaire[index]['answer']);
-    if (index < questionnaire.length - 1) {
+  void resetIndex() {
+    setState(() {
+      index = 0;
+    });
+  }
+
+  void answerQuestion(bool answer) {
+    if (index < 2) {
+      addIcon(answer == questionnaire[index]['answer']);
       increaseIndex();
+    } else {
+      if (index == 2) {
+        addIcon(answer == questionnaire[index]['answer']);
+        setState(() {
+          questionnaire.add({'question': evaluateAnswers(), 'answer': true});
+        });
+        increaseIndex();
+      } else if (index > 2) {
+        setState(() {
+          questionnaire.removeAt(3);
+          childrenIcons.removeRange(0, childrenIcons.length);
+        });
+
+        resetIndex();
+      }
     }
+  }
+
+  String evaluateAnswers() {
+    int rightAnswers = childrenIcons.map((e) => e.icon.hashCode == Icons.done.hashCode).length;
+    int wrongAnswers = childrenIcons.map((e) => e.icon.hashCode == Icons.close.hashCode).length;
+    return 'You had $rightAnswers right answers and $wrongAnswers wrong answers';
   }
 
   @override
@@ -116,7 +143,7 @@ class _QuizPageState extends State<QuizPage> {
               onPressed: () {
                 //The user picked true.
                 // addIcon(true);
-                evaluateAnswer(true);
+                answerQuestion(true);
               },
             ),
           ),
@@ -136,7 +163,7 @@ class _QuizPageState extends State<QuizPage> {
               onPressed: () {
                 //The user picked false.
                 // addIcon(false);
-                evaluateAnswer(false);
+                answerQuestion(false);
               },
             ),
           ),
