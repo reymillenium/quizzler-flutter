@@ -28,52 +28,26 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Widget> childrenIcons = [];
 
-  // Widget createRightIcon() {
-  //   return (Icon(
-  //     Icons.done,
-  //     color: Colors.green,
-  //   ));
-  // }
-  //
-  // Widget createWrongIcon() {
-  //   return (Icon(
-  //     Icons.close,
-  //     color: Colors.red,
-  //   ));
-  // }
-
-  Widget createIcon({IconData icon, Color color}) {
+  Widget createIcon({IconData icon = Icons.done, Color color = Colors.green}) {
     return (Icon(
       icon,
       color: color,
     ));
   }
 
-  void addRightIcon() {
-    setState(() {
-      // childrenIcons.add(createRightIcon());
-      childrenIcons.add(createIcon(icon: Icons.done, color: Colors.green));
-    });
-  }
-
-  void addWrongIcon() {
-    setState(() {
-      // childrenIcons.add(createRightIcon());
-      childrenIcons.add(createIcon(icon: Icons.close, color: Colors.red));
-    });
-  }
-
   void addIcon(bool isCorrect) {
     setState(() {
-      // childrenIcons.add(createRightIcon());
-      // childrenIcons.add(createIcon(icon: Icons.close, color: Colors.red));
-      Widget icon = (isCorrect ? createIcon(icon: Icons.done, color: Colors.green) : createIcon(icon: Icons.close, color: Colors.red));
-      childrenIcons.add(icon);
+      Icon newIcon = (isCorrect ? createIcon() : createIcon(icon: Icons.close, color: Colors.red));
+      childrenIcons.add(newIcon);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (childrenIcons.isEmpty) {
+      childrenIcons.add(createIcon(icon: Icons.done, color: Colors.grey.shade900));
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
