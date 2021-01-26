@@ -27,6 +27,12 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> childrenIcons = [];
+  int index = 0;
+  List<Map> questionnaire = [
+    {'question': 'You can lead a cow down stairs but not up stairs.', 'answer': false},
+    {'question': 'Approximately one quarter of human bones are in the feet.', 'answer': true},
+    {'question': 'A slug\'s blood is green.', 'answer': true},
+  ];
 
   Widget createIcon({IconData icon = Icons.done, Color color = Colors.green}) {
     return (Icon(
@@ -51,14 +57,27 @@ class _QuizPageState extends State<QuizPage> {
     });
   }
 
+  void increaseIndex() {
+    setState(() {
+      index++;
+    });
+  }
+
+  void evaluateAnswer(bool answer) {
+    addIcon(answer == questionnaire[index]['answer']);
+    if (index < questionnaire.length - 1) {
+      increaseIndex();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (childrenIcons.isEmpty) {
-      childrenIcons.add(createIcon(icon: Icons.phone, color: Colors.grey.shade900));
-      // childrenIcons.add(createIcon(icon: Icons.phone, color: Colors.green));
-    } else if (childrenIcons.length > 1 && childrenIcons.first.icon.hashCode == Icons.phone.hashCode) {
-      childrenIcons.removeAt(0);
-    }
+    // if (childrenIcons.isEmpty) {
+    //   childrenIcons.add(createIcon(icon: Icons.phone, color: Colors.grey.shade900));
+    //   // childrenIcons.add(createIcon(icon: Icons.phone, color: Colors.green));
+    // } else if (childrenIcons.length > 1 && childrenIcons.first.icon.hashCode == Icons.phone.hashCode) {
+    //   childrenIcons.removeAt(0);
+    // }
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -70,7 +89,8 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go.',
+                // 'This is where the question text will go.',
+                questionnaire[index]['question'],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -95,7 +115,8 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked true.
-                addIcon(true);
+                // addIcon(true);
+                evaluateAnswer(true);
               },
             ),
           ),
@@ -114,15 +135,19 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked false.
-                addIcon(false);
+                // addIcon(false);
+                evaluateAnswer(false);
               },
             ),
           ),
         ),
 
         //  Score keeper
-        Row(
-          children: childrenIcons,
+        Container(
+          height: 30.0,
+          child: Row(
+            children: childrenIcons,
+          ),
         ),
       ],
     );
