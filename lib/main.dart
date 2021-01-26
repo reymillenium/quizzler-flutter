@@ -92,8 +92,8 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   String evaluateAnswers() {
-    int rightAnswers = childrenIcons.map((e) => e.icon.hashCode == Icons.done.hashCode).length;
-    int wrongAnswers = childrenIcons.map((e) => e.icon.hashCode == Icons.close.hashCode).length;
+    int rightAnswers = childrenIcons.where((e) => e.icon.hashCode == Icons.done.hashCode).length;
+    int wrongAnswers = childrenIcons.where((e) => e.icon.hashCode == Icons.close.hashCode).length;
     return 'You had $rightAnswers right answers and $wrongAnswers wrong answers';
   }
 
