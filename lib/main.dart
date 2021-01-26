@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(Quizzler());
@@ -25,6 +26,52 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  List<Widget> childrenIcons = [];
+
+  // Widget createRightIcon() {
+  //   return (Icon(
+  //     Icons.done,
+  //     color: Colors.green,
+  //   ));
+  // }
+  //
+  // Widget createWrongIcon() {
+  //   return (Icon(
+  //     Icons.close,
+  //     color: Colors.red,
+  //   ));
+  // }
+
+  Widget createIcon({IconData icon, Color color}) {
+    return (Icon(
+      icon,
+      color: color,
+    ));
+  }
+
+  void addRightIcon() {
+    setState(() {
+      // childrenIcons.add(createRightIcon());
+      childrenIcons.add(createIcon(icon: Icons.done, color: Colors.green));
+    });
+  }
+
+  void addWrongIcon() {
+    setState(() {
+      // childrenIcons.add(createRightIcon());
+      childrenIcons.add(createIcon(icon: Icons.close, color: Colors.red));
+    });
+  }
+
+  void addIcon(bool isCorrect) {
+    setState(() {
+      // childrenIcons.add(createRightIcon());
+      // childrenIcons.add(createIcon(icon: Icons.close, color: Colors.red));
+      Widget icon = (isCorrect ? createIcon(icon: Icons.done, color: Colors.green) : createIcon(icon: Icons.close, color: Colors.red));
+      childrenIcons.add(icon);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -62,6 +109,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked true.
+                addIcon(true);
               },
             ),
           ),
@@ -80,11 +128,16 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked false.
+                addIcon(false);
               },
             ),
           ),
         ),
-        //TODO: Add a Row here as your score keeper
+
+        //  Score keeper
+        Row(
+          children: childrenIcons,
+        ),
       ],
     );
   }
