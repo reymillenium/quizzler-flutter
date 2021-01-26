@@ -27,6 +27,7 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> childrenIcons = [];
+  int initialMaxIndex = 2;
   int index = 0;
   List<Map> questionnaire = [
     {'question': 'You can lead a cow down stairs but not up stairs.', 'answer': false},
@@ -70,17 +71,17 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   void answerQuestion(bool answer) {
-    if (index < 2) {
+    if (index < initialMaxIndex) {
       addIcon(answer == questionnaire[index]['answer']);
       increaseIndex();
     } else {
-      if (index == 2) {
+      if (index == initialMaxIndex) {
         addIcon(answer == questionnaire[index]['answer']);
         setState(() {
           questionnaire.add({'question': evaluateAnswers(), 'answer': true});
         });
         increaseIndex();
-      } else if (index > 2) {
+      } else if (index > initialMaxIndex) {
         setState(() {
           questionnaire.removeAt(3);
           childrenIcons.removeRange(0, childrenIcons.length);
@@ -92,9 +93,9 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   String evaluateAnswers() {
-    int rightAnswers = childrenIcons.where((e) => e.icon.hashCode == Icons.done.hashCode).length;
-    int wrongAnswers = childrenIcons.where((e) => e.icon.hashCode == Icons.close.hashCode).length;
-    return 'You had $rightAnswers right answers and $wrongAnswers wrong answers';
+    int rightAnswersAmount = childrenIcons.where((e) => e.icon.hashCode == Icons.done.hashCode).length;
+    int wrongAnswersAmount = childrenIcons.where((e) => e.icon.hashCode == Icons.close.hashCode).length;
+    return 'You had $rightAnswersAmount right answers and $wrongAnswersAmount wrong answers';
   }
 
   @override
