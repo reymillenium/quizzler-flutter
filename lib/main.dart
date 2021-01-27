@@ -1,8 +1,5 @@
-import 'package:audioplayers/audio_cache.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'quiz_brain.dart';
-import 'package:audioplayers/audioplayers.dart';
 
 QuizBrain quizBrain = QuizBrain();
 
@@ -31,69 +28,6 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  AudioCache player = AudioCache();
-  List<Icon> childrenIcons = [];
-  int index = 0;
-
-  Widget createIcon({IconData icon = Icons.done, Color color = Colors.green}) {
-    return (Icon(
-      icon,
-      color: color,
-    ));
-  }
-
-  void addIcon(bool isCorrect) {
-    setState(() {
-      Icon newIcon = (isCorrect ? createIcon() : createIcon(icon: Icons.close, color: Colors.red));
-      childrenIcons.add(newIcon);
-    });
-  }
-
-  void playSound(bool isCorrect) {
-    String audioFileName = isCorrect ? 'right_answer.wav' : 'wrong_answer.wav';
-    player.play(audioFileName);
-  }
-
-  void increaseIndex() {
-    setState(() {
-      index++;
-    });
-  }
-
-  void resetIndex() {
-    setState(() {
-      index = 0;
-    });
-  }
-
-  void answerQuestion(bool answer) {
-    if (index > quizBrain.initialMaxIndex()) {
-      setState(() {
-        quizBrain.removeLast();
-        childrenIcons.removeRange(0, childrenIcons.length);
-      });
-      resetIndex();
-    } else {
-      addIcon(answer == quizBrain.getQuestion(index).answer);
-      playSound(answer == quizBrain.getQuestion(index).answer);
-      if (index == quizBrain.initialMaxIndex()) {
-        setState(() {
-          quizBrain.addQuestion(evaluateAnswers(), true);
-        });
-      }
-      increaseIndex();
-    }
-  }
-
-  String evaluateAnswers() {
-    int rightAnswersAmount = childrenIcons.where((e) => e.icon.hashCode == Icons.done.hashCode).length;
-    int wrongAnswersAmount = childrenIcons.where((e) => e.icon.hashCode == Icons.close.hashCode).length;
-    String firstEvaluation = 'You had ${rightAnswersAmount == 0 ? 'no' : rightAnswersAmount} right answer${rightAnswersAmount == 1 ? '' : 's'} and ${wrongAnswersAmount == 0 ? 'no' : wrongAnswersAmount} wrong answer${wrongAnswersAmount == 1 ? '' : 's'}. ';
-    String finalOpinion = rightAnswersAmount == childrenIcons.length ? 'You are very wise!' : (wrongAnswersAmount == childrenIcons.length ? 'You definitely need to read a little more!' : (rightAnswersAmount > wrongAnswersAmount ? 'Not so bad. Good job!' : 'Keep reading!'));
-
-    return firstEvaluation + finalOpinion;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -107,7 +41,7 @@ class _QuizPageState extends State<QuizPage> {
             child: Center(
               child: Text(
                 // 'This is where the question text will go.',
-                quizBrain.getQuestion(index).question,
+                quizBrain.getCurrentQuestionText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -133,7 +67,9 @@ class _QuizPageState extends State<QuizPage> {
               onPressed: () {
                 //The user picked true.
                 // addIcon(true);
-                answerQuestion(true);
+                setState(() {
+                  quizBrain.answerQuestion(true);
+                });
               },
             ),
           ),
@@ -153,7 +89,9 @@ class _QuizPageState extends State<QuizPage> {
               onPressed: () {
                 //The user picked false.
                 // addIcon(false);
-                answerQuestion(false);
+                setState(() {
+                  quizBrain.answerQuestion(false);
+                });
               },
             ),
           ),
@@ -163,7 +101,7 @@ class _QuizPageState extends State<QuizPage> {
         Container(
           height: 30.0,
           child: Row(
-            children: childrenIcons,
+            children: quizBrain.childrenIcons(),
           ),
         ),
       ],

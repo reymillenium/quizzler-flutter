@@ -1,9 +1,12 @@
+import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter/material.dart';
 import 'question.dart';
 
 class QuizBrain {
-  // int _initialMaxIndex = 12;
   int _initialMaxIndex;
+  int _index = 0;
+  List<Icon> _childrenIcons = [];
+  AudioCache _player = AudioCache();
 
   List<Question> _questionnaire = [
     Question('Some cats are actually allergic to humans', true),
@@ -25,33 +28,64 @@ class QuizBrain {
   QuizBrain() {
     this._initialMaxIndex = _questionnaire.length - 1;
   }
-  // List<Map> questionnaire = [
-  //   {'question': 'You can lead a cow down stairs but not up stairs.', 'answer': false},
-  //   {'question': 'Approximately one quarter of human bones are in the feet.', 'answer': true},
-  //   {'question': 'A slug\'s blood is green.', 'answer': true},
-  // ];
-
-  // String getQuestionText(int index) {
-  //   return _questionnaire[index].question;
-  // }
 
   // Getters:
-  int initialMaxIndex() {
-    return _initialMaxIndex;
+  String getCurrentQuestionText() {
+    return _questionnaire[_index].question;
   }
 
-  Question getQuestion(int index) {
-    return _questionnaire[index];
+  List<Icon> childrenIcons() {
+    return _childrenIcons;
   }
-
-  // Setters:
 
   // Public Methods
-  void addQuestion(String questionText, bool answer) {
+  void answerQuestion(bool answer) {
+    if (_index > _initialMaxIndex) {
+      _questionnaire.removeLast();
+      _childrenIcons.removeRange(0, _childrenIcons.length);
+      _index = 0;
+    } else {
+      _addIcon(answer == _getCurrentQuestion().answer);
+      _playSound(answer == _getCurrentQuestion().answer);
+      if (_index == _initialMaxIndex) {
+        _addQuestion(_evaluateAnswers(), true);
+      }
+      _index++;
+    }
+  }
+
+  // Private Methods
+  Widget _createIcon({IconData icon = Icons.done, Color color = Colors.green}) {
+    return (Icon(
+      icon,
+      color: color,
+    ));
+  }
+
+  void _playSound(bool isCorrect) {
+    String audioFileName = isCorrect ? 'right_answer.wav' : 'wrong_answer.wav';
+    _player.play(audioFileName);
+  }
+
+  Question _getCurrentQuestion() {
+    return _questionnaire[_index];
+  }
+
+  void _addQuestion(String questionText, bool answer) {
     _questionnaire.add(Question(questionText, answer));
   }
 
-  void removeLast() {
-    _questionnaire.removeLast();
+  void _addIcon(bool isCorrect) {
+    Icon newIcon = (isCorrect ? _createIcon() : _createIcon(icon: Icons.close, color: Colors.red));
+    _childrenIcons.add(newIcon);
+  }
+
+  String _evaluateAnswers() {
+    int totalAnswersAmount = _childrenIcons.length;
+    int rightAnswersAmount = _childrenIcons.where((e) => e.icon.hashCode == Icons.done.hashCode).length;
+    int wrongAnswersAmount = _childrenIcons.where((e) => e.icon.hashCode == Icons.close.hashCode).length;
+    String firstEvaluation = 'You had ${rightAnswersAmount == 0 ? 'no' : rightAnswersAmount} right answer${rightAnswersAmount == 1 ? '' : 's'} and ${wrongAnswersAmount == 0 ? 'no' : wrongAnswersAmount} wrong answer${wrongAnswersAmount == 1 ? '' : 's'}. ';
+    String finalOpinion = rightAnswersAmount == totalAnswersAmount ? 'You are very wise!' : (wrongAnswersAmount == totalAnswersAmount ? 'You definitely need to read a little more!' : (rightAnswersAmount > wrongAnswersAmount ? 'Not so bad. Good job!' : 'Keep reading!'));
+    return firstEvaluation + finalOpinion;
   }
 }
