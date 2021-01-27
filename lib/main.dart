@@ -82,7 +82,10 @@ class _QuizPageState extends State<QuizPage> {
   String evaluateAnswers() {
     int rightAnswersAmount = childrenIcons.where((e) => e.icon.hashCode == Icons.done.hashCode).length;
     int wrongAnswersAmount = childrenIcons.where((e) => e.icon.hashCode == Icons.close.hashCode).length;
-    return 'You had $rightAnswersAmount right answers and $wrongAnswersAmount wrong answers';
+    String firstEvaluation = 'You had ${rightAnswersAmount == 0 ? 'no' : rightAnswersAmount} right answer${rightAnswersAmount == 1 ? '' : 's'} and ${wrongAnswersAmount == 0 ? 'no' : wrongAnswersAmount} wrong answer${wrongAnswersAmount == 1 ? '' : 's'}. ';
+    String finalOpinion = rightAnswersAmount == childrenIcons.length ? 'You are very wise!' : (wrongAnswersAmount == childrenIcons.length ? 'You definitely need to read a little more!' : (rightAnswersAmount > wrongAnswersAmount ? 'Not so bad. Good job!' : 'Keep reading!'));
+
+    return firstEvaluation + finalOpinion;
   }
 
   @override
