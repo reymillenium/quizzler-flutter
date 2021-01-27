@@ -1,6 +1,8 @@
+import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'quiz_brain.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 QuizBrain quizBrain = QuizBrain();
 
@@ -29,6 +31,7 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  AudioCache player = AudioCache();
   List<Icon> childrenIcons = [];
   int index = 0;
 
@@ -44,6 +47,11 @@ class _QuizPageState extends State<QuizPage> {
       Icon newIcon = (isCorrect ? createIcon() : createIcon(icon: Icons.close, color: Colors.red));
       childrenIcons.add(newIcon);
     });
+  }
+
+  void playSound(bool isCorrect) {
+    String audioFileName = isCorrect ? 'right_answer.wav' : 'wrong_answer.wav';
+    player.play(audioFileName);
   }
 
   void increaseIndex() {
@@ -67,6 +75,7 @@ class _QuizPageState extends State<QuizPage> {
       resetIndex();
     } else {
       addIcon(answer == quizBrain.getQuestion(index).answer);
+      playSound(answer == quizBrain.getQuestion(index).answer);
       if (index == quizBrain.initialMaxIndex()) {
         setState(() {
           quizBrain.addQuestion(evaluateAnswers(), true);
