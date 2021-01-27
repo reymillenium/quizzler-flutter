@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'quiz_brain.dart';
+
+QuizBrain quizBrain = QuizBrain();
 
 void main() => runApp(Quizzler());
 
@@ -27,13 +30,7 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> childrenIcons = [];
-  int initialMaxIndex = 2;
   int index = 0;
-  List<Map> questionnaire = [
-    {'question': 'You can lead a cow down stairs but not up stairs.', 'answer': false},
-    {'question': 'Approximately one quarter of human bones are in the feet.', 'answer': true},
-    {'question': 'A slug\'s blood is green.', 'answer': true},
-  ];
 
   Widget createIcon({IconData icon = Icons.done, Color color = Colors.green}) {
     return (Icon(
@@ -62,17 +59,17 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   void answerQuestion(bool answer) {
-    if (index > initialMaxIndex) {
+    if (index > quizBrain.initialMaxIndex) {
       setState(() {
-        questionnaire.removeAt(3);
+        quizBrain.removeLast();
         childrenIcons.removeRange(0, childrenIcons.length);
       });
       resetIndex();
     } else {
-      addIcon(answer == questionnaire[index]['answer']);
-      if (index == initialMaxIndex) {
+      addIcon(answer == quizBrain.getQuestion(index).answer);
+      if (index == quizBrain.initialMaxIndex) {
         setState(() {
-          questionnaire.add({'question': evaluateAnswers(), 'answer': true});
+          quizBrain.addQuestion(evaluateAnswers(), true);
         });
       }
       increaseIndex();
@@ -101,7 +98,7 @@ class _QuizPageState extends State<QuizPage> {
             child: Center(
               child: Text(
                 // 'This is where the question text will go.',
-                questionnaire[index]['question'],
+                quizBrain.getQuestion(index).question,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
