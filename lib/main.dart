@@ -59,7 +59,7 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   void answerQuestion(bool answer) {
-    if (index > quizBrain.initialMaxIndex) {
+    if (index > quizBrain.initialMaxIndex()) {
       setState(() {
         quizBrain.removeLast();
         childrenIcons.removeRange(0, childrenIcons.length);
@@ -67,7 +67,7 @@ class _QuizPageState extends State<QuizPage> {
       resetIndex();
     } else {
       addIcon(answer == quizBrain.getQuestion(index).answer);
-      if (index == quizBrain.initialMaxIndex) {
+      if (index == quizBrain.initialMaxIndex()) {
         setState(() {
           quizBrain.addQuestion(evaluateAnswers(), true);
         });

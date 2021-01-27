@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'question.dart';
 
 class QuizBrain {
-  int initialMaxIndex = 12;
+  // int _initialMaxIndex = 12;
+  int _initialMaxIndex;
 
   List<Question> _questionnaire = [
     Question('Some cats are actually allergic to humans', true),
@@ -20,6 +21,10 @@ class QuizBrain {
     Question('In West Virginia, USA, if you accidentally hit an animal with your car, you are free to take it home to eat.', true),
   ];
 
+  // Constructor:
+  QuizBrain() {
+    this._initialMaxIndex = _questionnaire.length - 1;
+  }
   // List<Map> questionnaire = [
   //   {'question': 'You can lead a cow down stairs but not up stairs.', 'answer': false},
   //   {'question': 'Approximately one quarter of human bones are in the feet.', 'answer': true},
@@ -30,10 +35,18 @@ class QuizBrain {
   //   return _questionnaire[index].question;
   // }
 
+  // Getters:
+  int initialMaxIndex() {
+    return _initialMaxIndex;
+  }
+
   Question getQuestion(int index) {
     return _questionnaire[index];
   }
 
+  // Setters:
+
+  // Public Methods
   void addQuestion(String questionText, bool answer) {
     _questionnaire.add(Question(questionText, answer));
   }
