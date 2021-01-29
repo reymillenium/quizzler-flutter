@@ -68,7 +68,7 @@ class _QuizPageState extends State<QuizPage> {
                 //The user picked true.
                 // addIcon(true);
                 setState(() {
-                  quizBrain.answerQuestion(true);
+                  quizBrain.answerQuestion(true, context);
                 });
               },
             ),
@@ -90,7 +90,7 @@ class _QuizPageState extends State<QuizPage> {
                 //The user picked false.
                 // addIcon(false);
                 setState(() {
-                  quizBrain.answerQuestion(false);
+                  quizBrain.answerQuestion(false, context);
                 });
               },
             ),
