@@ -39,12 +39,22 @@ class QuizBrain {
     _playSound(answer == _getCurrentQuestion().answer);
 
     if (_isFinished()) {
-      _createAlert(context, _evaluateAnswers()).show();
-      _childrenIcons.removeRange(0, _childrenIcons.length);
-      _index = 0;
+      _createAlert(context, _evaluateAnswers()).show().then((value) {
+        _childrenIcons.removeRange(0, _childrenIcons.length);
+        _index = 0;
+        (context as Element).reassemble();
+      });
     } else {
       _increaseIndex();
     }
+  }
+
+  double percentagePerAmount(int amount) {
+    return (amount * 100 / (_questionnaire.length));
+  }
+
+  double currentPercentage() {
+    return ((_index + 1) * 100 / (_questionnaire.length));
   }
 
   // Private Methods

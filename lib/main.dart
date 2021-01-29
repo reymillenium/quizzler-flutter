@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'quiz_brain.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 QuizBrain quizBrain = QuizBrain();
 
@@ -10,7 +11,11 @@ class Quizzler extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.grey.shade900,
+        backgroundColor: Colors.grey[850],
+        appBar: AppBar(
+          backgroundColor: Colors.grey.shade900,
+          title: Text('Quizzler'),
+        ),
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.0),
@@ -30,12 +35,43 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   @override
   Widget build(BuildContext context) {
+    final slider = SleekCircularSlider(
+      appearance: CircularSliderAppearance(
+        infoProperties: InfoProperties(
+          mainLabelStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+          ),
+        ),
+        customWidths: CustomSliderWidths(progressBarWidth: 10),
+        customColors: CustomSliderColors(
+          shadowColor: Colors.white,
+          trackColor: Colors.black38,
+          progressBarColors: [Colors.green, Colors.yellowAccent, Colors.redAccent],
+        ),
+      ),
+      min: quizBrain.percentagePerAmount(1),
+      max: quizBrain.percentagePerAmount(13),
+      initialValue: quizBrain.currentPercentage(),
+    );
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Expanded(
-          flex: 5,
+          flex: 3,
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Center(
+              child: slider,
+            ),
+          ),
+        ),
+
+        //
+        Expanded(
+          flex: 3,
           child: Padding(
             padding: EdgeInsets.all(10.0),
             child: Center(
